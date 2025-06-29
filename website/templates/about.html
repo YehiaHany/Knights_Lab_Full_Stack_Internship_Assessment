@@ -1,0 +1,101 @@
+{% extends "base.html"%} {% block title%}about{% endblock%} {% block content %}
+<main class="main">
+  <!-- Page Title -->
+  <div
+    class="page-title dark-background"
+    data-aos="fade"
+    style="background-image: url(assets/img/about-page-title-bg.jpg)"
+  >
+    <div class="container">
+      <h1>About</h1>
+      <nav class="breadcrumbs">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li class="current">About</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+  <!-- End Page Title -->
+
+  <!-- About Section -->
+  <section id="about" class="about section">
+    <div class="container">
+      <div class="row gy-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="col-lg-5">
+          <img src="{{url_for('static',filename='assets/img/about.jpg')}}" class="img-fluid" alt="" />
+        </div>
+        <div class="col-lg-7" data-aos="fade-up" data-aos-delay="200">
+          <div class="content">
+            <h3>About This Site</h3>
+            <p>
+            This website allows users to upload images and uses deep learning models to automatically detect, classify, and segment pets in the image. If no pet is detected, the system notifies the user accordingly.
+            <br><br>
+            The machine learning models used are
+            </p>
+            <ul>
+              <li>
+                <i class="bi bi-check-circle-fill"></i>
+                <span
+                  >resnet50 – for classification</span
+                >
+              </li>
+              <li>
+                <i class="bi bi-check-circle-fill"></i>
+                <span
+                  >deeplabv3_resnet50 – for segmentation</span
+                >
+              </li>
+              <li>
+                <i class="bi bi-check-circle-fill"></i>
+                <span
+                  >YOLO – for object detection</span
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- /About Section -->
+
+  <!-- Team Section -->
+  <section id="team" class="team section">
+    <!-- Section Title -->
+    <div class="container section-title">
+      <h2>Author</h2>
+    </div>
+    <!-- End Section Title -->
+
+<div class="container">
+  <div class="row gy-4 justify-content-center align-items-center">
+    <div
+      class="col-lg-3 col-md-6 d-flex align-items-stretch"
+      data-aos="fade-up"
+      data-aos-delay="50"
+    >
+      <div class="team-member">
+        <div class="member-img">
+          <img src="{{url_for('static',filename='assets/img/team/team-1.jpg')}}" class="img-fluid" alt="" />
+          <div class="social">
+                <a href="https://www.facebook.com/yehia.hany.12/"><i class="bi bi-facebook"></i></a>
+                <a href="https://github.com/YehiaHany"><i class="bi bi-github"></i></a>
+                <a href="https://www.linkedin.com/in/yehia-hany-1183982a5"><i class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+        <div class="member-info">
+          <h4>YehiaHany</h4>
+          <span>Software Developer</span>
+        </div>
+      </div>
+    </div>
+    <!-- End Team Member -->
+  </div>
+</div>
+
+  </section>
+  <!-- /Team Section -->
+</main>
+
+{% endblock %}
