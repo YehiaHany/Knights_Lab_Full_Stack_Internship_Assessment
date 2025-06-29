@@ -82,7 +82,7 @@
             {% if user.is_authenticated %}
             <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
             {%else%}
-            <li ><a href="/login" class="{% if path.startswith('/login') %}active{% endif %}">LogIn</a></li>
+            <li ><a href="/login?next={{ request.path }}"class="{% if path.startswith('/login') %}active{% endif %}">LogIn</a></li>
             {%endif%}
             </div>
               </div>
@@ -125,7 +125,7 @@
                 <div id="login-button-desktop" >                
                 <div  class="d-flex " data-aos="fade-up"  data-aos-delay="200">
                 <a
-                  href="/login"
+                  href="/login?next={{ request.path }}"
                   class="btn-get-started"
                   onmouseover="this.style.background='#68c1ea'; this.style.color='#fff'"
                   onmouseout="this.style.background='transparent'; this.style.color='#fff'"
@@ -151,6 +151,7 @@
                 </a>
               </div>
                 {% endif %}
+            </div>
             </div>
 
           <i class="mobile-nav-toggle d-xl-none bi bi-list" style="{% if path.startswith('/login') %}display:none{% endif %}"></i>

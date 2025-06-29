@@ -28,7 +28,7 @@ def analyze():
             img_cls, img_det, img_seg, label = run_all_models(image)
 
             if img_seg is None:
-                return render_template('new_analyze.html', classification=label, no_pets=True)
+                return render_template('new_analyze.html', classification=label, no_pets=True,user=current_user)
 
             # Convert images to base64
             def image_to_base64(img):
@@ -47,7 +47,8 @@ def analyze():
                 img_det=img_det_b64,
                 img_seg=img_seg_b64,
                 classification=label,
-                no_pets=False
+                no_pets=False,
+                user=current_user
             )
 
     return render_template("new_analyze.html", user=current_user)

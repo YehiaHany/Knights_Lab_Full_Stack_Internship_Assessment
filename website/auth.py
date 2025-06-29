@@ -13,7 +13,9 @@ EMAIL_REGEX = r'^[\w\.-]+@[\w\.-]+\.\w+$'
 
 @auth.route('/login', methods=['GET'])
 def login_signup():
-    return render_template("new_login.html", user=current_user)
+    # Read ?next=/somepage from query string and pass to template
+    next_url = request.args.get('next')
+    return render_template("new_login.html", user=current_user, next_url=next_url)
 
 
 @auth.route('/auth_action', methods=['POST'])
@@ -24,18 +26,18 @@ def auth_action():
     if action == 'login':
         email = data.get('email')
         password = data.get('password')
+        next_url = data.get('next') or url_for('views.home')
 
         # Validate email format
         if not re.match(EMAIL_REGEX, email):
             return jsonify({'status': 'error', 'message': 'Invalid email format'})
 
         user = User.query.filter_by(email=email).first()
-        if user:
-            if check_password_hash(user.password, password):
-                login_user(user, remember=True)
-                return jsonify({'status': 'success', 'redirect': url_for('views.home')})
-            else:
-                return jsonify({'status': 'error', 'message': 'Incorrect password'})
+        if user and check_password_hash(user.password, password):
+            login_user(user, remember=True)
+            return jsonify({'status': 'success', 'redirect': next_url})
+        elif user:
+            return jsonify({'status': 'error', 'message': 'Incorrect password'})
         else:
             return jsonify({'status': 'error', 'message': 'Email does not exist'})
 
@@ -44,6 +46,7 @@ def auth_action():
         first_name = data.get('firstName')
         password1 = data.get('password1')
         password2 = data.get('password2')
+        next_url = data.get('next') or url_for('views.home')
 
         # Validate email format
         if not re.match(EMAIL_REGEX, email):
@@ -61,16 +64,17 @@ def auth_action():
             return jsonify({'status': 'error', 'message': "Passwords don't match"})
         elif len(password1) < 7:
             return jsonify({'status': 'error', 'message': 'Password must be at least 7 characters'})
-        else:
-            new_user = User(
-                email=email,
-                first_name=first_name,
-                password=generate_password_hash(password1, method='pbkdf2:sha256')
-            )
-            db.session.add(new_user)
-            db.session.commit()
-            login_user(new_user, remember=True)
-            return jsonify({'status': 'success', 'redirect': url_for('views.home')})
+
+        # Create and login new user
+        new_user = User(
+            email=email,
+            first_name=first_name,
+            password=generate_password_hash(password1, method='pbkdf2:sha256')
+        )
+        db.session.add(new_user)
+        db.session.commit()
+        login_user(new_user, remember=True)
+        return jsonify({'status': 'success', 'redirect': next_url})
 
     return jsonify({'status': 'error', 'message': 'Invalid action'})
 

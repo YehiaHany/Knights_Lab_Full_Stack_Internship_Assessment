@@ -13,6 +13,7 @@
       <div class="form-wrapper align-items-center">
         <form method="POST" class="form sign-up">
           <input type="hidden" name="action" value="signup">
+          <input type="hidden" name="next" value="{{ next_url or '/' }}">
           <div class="input-group">
             <i class='bx bxs-user'></i>
             <input type="text" name="firstName" placeholder="Username" required>
@@ -50,6 +51,7 @@
       <div class="form-wrapper align-items-center">
         <form method="POST" class="form sign-in">
           <input type="hidden" name="action" value="login">
+          <input type="hidden" name="next" value="{{ next_url or '/' }}">
           <div class="input-group">
             <i class='bx bxs-user'></i>
             <input type="email" name="email" placeholder="Email" required>
