@@ -1,61 +1,82 @@
-const container = document.getElementById('container');
-
-// Toggle between sign-in and sign-up modes
-function toggle() {
-  container.classList.toggle('sign-in');
-  container.classList.toggle('sign-up');
-}
-
-// Default to sign-in view on load
-setTimeout(() => {
-  container.classList.add('sign-in');
-}, 200);
-
-// Attach submit handler to all forms (sign-in and sign-up)
-document.querySelectorAll('form').forEach((form) => {
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    // Collect form data
-    const formData = new FormData(form);
-    const data = {};
-    formData.forEach((value, key) => {
-      data[key] = value;
-    });
-
-    const actionType = data['action']; // login or signup
-    const successMessage =
-      actionType === 'login' ? 'Signed in successfully!' : 'Signed up successfully!';
-
-    try {
-      const response = await fetch('/auth_action', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-
-      if (result.status === 'success') {
-        localStorage.setItem('auth_success', successMessage);
-
-        // Redirect to either server-provided redirect or fallback
-        const redirectUrl = result.redirect || data['next'] || '/';
-        console.log("Redirecting to:", redirectUrl);
-        window.location.href = redirectUrl;
-      } else {
-        showToast(result.message);
+document.addEventListener('DOMContentLoaded', () => {
+  // Show info alert for Cross-Site Tracking on page load
+  Swal.fire({
+    icon: 'info',
+    title: 'Important Notice',
+    html: 'Please if you <b>enable preventing Cross-Site Tracking</b> in your browser settings <b>disable it</b> (especially on iOS) to use our service properly.',
+    confirmButtonText: 'Got it!',
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    customClass: {
+      confirmButton: 'custom-confirm-button'
+    },
+    didOpen: () => {
+      const confirmBtn = document.querySelector('.swal2-confirm.custom-confirm-button');
+      if (confirmBtn) {
+        confirmBtn.style.backgroundColor = '#56b8e6';
+        confirmBtn.style.border = 'none';
+        confirmBtn.style.boxShadow = '0 0 0 3px #56b8e655'; // soft highlight with same color
+        confirmBtn.style.outline = 'none'; // remove default purple outline
+        confirmBtn.addEventListener('mousedown', (e) => {
+          e.preventDefault(); // prevents disappearance on outside click
+        });
       }
-    } catch (err) {
-      showToast("Something went wrong. Please try again.");
-      console.error(err);
     }
   });
+
+  // Attach form submission handler to all forms
+  document.querySelectorAll('form').forEach((form) => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Extract form data
+      const formData = new FormData(form);
+      const data = {};
+      formData.forEach((value, key) => {
+        data[key] = value;
+      });
+
+      const actionType = data['action'];
+      const successMessage =
+        actionType === 'login'
+          ? 'Signed in successfully!'
+          : 'Signed up successfully!';
+
+      try {
+        const response = await fetch('/auth_action', {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+
+        if (result.status === 'success') {
+          localStorage.setItem('auth_success', successMessage);
+          const redirectUrl = result.redirect || data['next'] || '/';
+          window.location.href = redirectUrl;
+        } else {
+          showToast(result.message || 'Authentication failed.');
+        }
+      } catch (error) {
+        console.error(error);
+        showToast('Something went wrong. Please try again.');
+      }
+    });
+  });
+
+  // Show success toast from localStorage if exists
+  const flashMessage = localStorage.getItem('auth_success');
+  if (flashMessage) {
+    showSuccess(flashMessage);
+    localStorage.removeItem('auth_success');
+  }
 });
 
-// Show error toast using SweetAlert2
+// SweetAlert2: Error toast
 function showToast(message) {
   Swal.fire({
     toast: true,
@@ -70,5 +91,18 @@ function showToast(message) {
       toast.addEventListener('mouseenter', Swal.stopTimer);
       toast.addEventListener('mouseleave', Swal.resumeTimer);
     },
+  });
+}
+
+// SweetAlert2: Success toast
+function showSuccess(message) {
+  Swal.fire({
+    toast: true,
+    position: 'top-end',
+    icon: 'success',
+    title: message,
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
   });
 }

@@ -1,118 +1,124 @@
 {% extends "base.html" %}
-{% block title %}login{% endblock %}
-{% block content %}
+{% block title %}Login / Signup{% endblock %}
+
 {% block extra_css %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/login_signup.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/login_signup.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/sourcesanspro-font.css') }}">
 {% endblock %}
 
-<div id="container" class="contain">
-  <!-- FORM SECTION -->
-  <div class="row">
-    <!-- SIGN UP -->
-    <div class="col align-items-center flex-col sign-up">
-      <div class="form-wrapper align-items-center">
-        <form method="POST" class="form sign-up">
-          <input type="hidden" name="action" value="signup">
-          <input type="hidden" name="next" value="{{ next_url or '/' }}">
-          <div class="input-group">
-            <i class='bx bxs-user'></i>
-            <input type="text" name="firstName" placeholder="Username" required>
-          </div>
-          <div class="input-group">
-            <i class='bx bx-mail-send'></i>
-            <input type="email" name="email" placeholder="Email" required>
-          </div>
-          <div class="input-group">
-            <i class='bx bxs-lock-alt'></i>
-            <input type="password" name="password1" placeholder="Password" required>
-          </div>
-          <div class="input-group">
-            <i class='bx bxs-lock-alt'></i>
-            <input type="password" name="password2" placeholder="Confirm password" required>
-          </div>
-          <button type="submit">
-            Sign up
-          </button>
-          <p>
-            <span>
-              Already have an account?
-            </span>
-            <b onclick="toggle()" class="pointer">
-              Sign in here
-            </b>
-          </p>
-        </form>
-      </div>
+{% block content %}
+<div class="page-content form-v8">
+  <div class="form-v8-content">
+    <div class="form-left">
+      <img src="{{ url_for('static', filename='assets/img/form-v8.jpg') }}" alt="form">
     </div>
-    <!-- END SIGN UP -->
+    <div class="form-right">
+      <!-- Tab Switch Buttons -->
+      <div class="tab">
+        <div class="tab-inner">
+          <button class="tablinks" onclick="openTab(event, 'sign-in')" id="defaultOpen">Sign In</button>
+        </div>
+        <div class="tab-inner">
+          <button class="tablinks" onclick="openTab(event, 'sign-up')">Sign Up</button>
+        </div>
+      </div>
 
-    <!-- SIGN IN -->
-    <div class="col align-items-center flex-col sign-in">
-      <div class="form-wrapper align-items-center">
-        <form method="POST" class="form sign-in">
+      <!-- Sign In Form -->
+      <form class="form-detail">
+        <div class="tabcontent" id="sign-in">
           <input type="hidden" name="action" value="login">
           <input type="hidden" name="next" value="{{ next_url or '/' }}">
-          <div class="input-group">
-            <i class='bx bxs-user'></i>
-            <input type="email" name="email" placeholder="Email" required>
+          <div class="form-row">
+            <label class="form-row-inner">
+              <input type="email" name="email" class="input-text" required>
+              <span class="label">Email</span>
+              <span class="border"></span>
+            </label>
           </div>
-          <div class="input-group">
-            <i class='bx bxs-lock-alt'></i>
-            <input type="password" name="password" placeholder="Password" required>
+          <div class="form-row">
+            <label class="form-row-inner">
+              <input type="password" name="password" class="input-text" required>
+              <span class="label">Password</span>
+              <span class="border"></span>
+            </label>
           </div>
-          <button type="submit">
-            Sign in
-          </button>
-          <p>
-            <b>
-              Forgot password?
-            </b>
-          </p>
-          <p>
-            <span>
-              Don't have an account?
-            </span>
-            <b onclick="toggle()" class="pointer">
-              Sign up here
-            </b>
-          </p>
-        </form>
-      </div>
-      <div class="form-wrapper"></div>
-    </div>
-    <!-- END SIGN IN -->
-  </div>
-  <!-- END FORM SECTION -->
+          <div class="form-row-last">
+            <button type="submit" class="register">Sign In</button>
+          </div>
+        </div>
+      </form>
 
-  <!-- CONTENT SECTION -->
-  <div class="row content-row">
-    <!-- SIGN IN CONTENT -->
-    <div class="col align-items-center flex-col">
-      <div class="text sign-in">
-        <h2>
-          Welcome
-        </h2>
-      </div>
-      <div class="img sign-in"></div>
+      <!-- Sign Up Form -->
+      <form class="form-detail">
+        <div class="tabcontent" id="sign-up">
+          <input type="hidden" name="action" value="signup">
+          <input type="hidden" name="next" value="{{ next_url or '/' }}">
+          <div class="form-row">
+            <label class="form-row-inner">
+              <input type="text" name="firstName" class="input-text" required>
+              <span class="label">Username</span>
+              <span class="border"></span>
+            </label>
+          </div>
+          <div class="form-row">
+            <label class="form-row-inner">
+              <input type="email" name="email" class="input-text" required>
+              <span class="label">Email</span>
+              <span class="border"></span>
+            </label>
+          </div>
+          <div class="form-row">
+            <label class="form-row-inner">
+              <input type="password" name="password1" class="input-text" required>
+              <span class="label">Password</span>
+              <span class="border"></span>
+            </label>
+          </div>
+          <div class="form-row">
+            <label class="form-row-inner">
+              <input type="password" name="password2" class="input-text" required>
+              <span class="label">Confirm Password</span>
+              <span class="border"></span>
+            </label>
+          </div>
+          <div class="form-row-last">
+            <button type="submit" class="register">Register</button>
+          </div>
+        </div>
+      </form>
     </div>
-    <!-- END SIGN IN CONTENT -->
-
-    <!-- SIGN UP CONTENT -->
-    <div class="col align-items-center flex-col">
-      <div class="img sign-up"></div>
-      <div class="text sign-up">
-        <h2>
-          Join with us
-        </h2>
-      </div>
-    </div>
-    <!-- END SIGN UP CONTENT -->
   </div>
-  <!-- END CONTENT SECTION -->
 </div>
 {% endblock %}
 
 {% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ url_for('static', filename='assets/js/login_signup.js') }}"></script>
 
+<script>
+// Tab switching logic
+function openTab(evt, tabName) {
+  let i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].classList.remove("active");
+  }
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.classList.add("active");
+
+  localStorage.setItem("activeTab", tabName);
+}
+
+// Load previous tab state or default to Sign In
+document.addEventListener("DOMContentLoaded", function () {
+  const savedTab = localStorage.getItem("activeTab") || "sign-in";
+  document.getElementById(savedTab).style.display = "block";
+  const defaultBtn = document.getElementById("defaultOpen");
+  if (defaultBtn) defaultBtn.click();
+});
+</script>
 {% endblock %}
